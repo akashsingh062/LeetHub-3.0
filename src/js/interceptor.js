@@ -19,10 +19,10 @@ window.fetch = async function (...args) {
 
       if (data?.submission_id) {
         console.log('LeetHub: Submission ID detected', data.submission_id);
-        window.dispatchEvent(
+        document.dispatchEvent(
           new CustomEvent('leetHubSubmissionId', {
-            detail: { submissionId: data.submission_id }
-          })
+            detail: { submissionId: data.submission_id },
+          }),
         );
       }
     } catch (e) {
@@ -49,7 +49,7 @@ window.fetch = async function (...args) {
             timestamp: Date.now(),
           });
 
-          window.dispatchEvent(
+          document.dispatchEvent(
             new CustomEvent('leetHubSolutionPost', {
               detail: {
                 questionSlug: solutionData.questionSlug,
@@ -82,10 +82,7 @@ XMLHttpRequest.prototype.open = function (method, url, ...args) {
 };
 
 XMLHttpRequest.prototype.send = function (data) {
-  if (
-    this._leethub_url?.includes('/graphql/') &&
-    this._leethub_method === 'POST'
-  ) {
+  if (this._leethub_url?.includes('/graphql/') && this._leethub_method === 'POST') {
     console.log('LeetHub: GraphQL POST detected via XHR');
 
     try {
@@ -105,7 +102,7 @@ XMLHttpRequest.prototype.send = function (data) {
             timestamp: Date.now(),
           });
           // Dispatch custom event to notify content script
-          window.dispatchEvent(
+          document.dispatchEvent(
             new CustomEvent('leetHubSolutionPost', {
               detail: {
                 questionSlug: solutionData.questionSlug,
